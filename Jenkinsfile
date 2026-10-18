@@ -20,5 +20,20 @@ pipeline{
                 }
             }
         }
+
+        stage('Package') {
+            steps {
+                dir('app') {
+                    sh 'mvn -DskipTests package'
+                }
+            }
+        }
+
+        stage('Archive Artifact') {
+            steps {
+                archiveArtifacts artifacts: 'app/target/*.jar',
+                                 fingerprint: true
+            }
+        }
     }
 }
