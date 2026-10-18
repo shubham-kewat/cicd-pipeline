@@ -31,7 +31,7 @@ pipeline{
 
         stage('Archive Artifact') {
             steps {
-                archiveArtifacts artifacts: 'app/target/*.jar',
+                archiveArtifacts artifacts: 'app/target/lambda-cicd-platform-1.0.0.jar',
                                  fingerprint: true
             }
         }
