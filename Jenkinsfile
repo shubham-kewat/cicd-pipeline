@@ -12,5 +12,13 @@ pipeline{
                 echo 'First time something to stage in github'
             }
         }
+
+        stage('Test') {
+            steps {
+                dir('app') {
+                    sh 'mvn clean test'
+                }
+            }
+        }
     }
 }
