@@ -7,11 +7,22 @@ pipeline{
             }
         }
 
-        stage('Checkout'){
-            steps{
-                echo 'First time something to stage in github'
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+
+                script {
+                    env.GIT_COMMIT_SHA = sh(
+                        script: 'git rev-parse HEAD',
+                        returnStdout: true
+                    ).trim()
+                }
+
+                echo "Checked out commit: ${env.GIT_COMMIT_SHA}"
             }
-        }
+}
+
 
         stage('Test') {
             steps {
@@ -35,6 +46,27 @@ pipeline{
                                  fingerprint: true
             }
         }
+
+
+        stage('Create Build Metadata') {
+            steps {
+                sh '''
+                    set -eu
+
+                    cat > build-metadata.json <<EOF
+        {
+          "buildNumber": "${BUILD_NUMBER}",
+          "gitCommit": "${GIT_COMMIT_SHA}",
+          "artifact": "s3://lambda-cicd-platform-artifacts-491766120496-ap-south-1/builds/${BUILD_NUMBER}/lambda-cicd-platform-1.0.0.jar"
+        }
+        EOF
+                '''
+
+                archiveArtifacts artifacts: 'build-metadata.json',
+                                 fingerprint: true
+            }
+        }
+
 
         stage('Upload Artifact to S3') {
             steps {
