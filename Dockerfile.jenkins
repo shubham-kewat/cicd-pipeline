@@ -1,9 +1,31 @@
+#FROM jenkins/jenkins:lts-jdk21
+
+#USER root
+
+#RUN apt-get update \
+#    && apt-get install -y --no-install-recommends maven \
+#    && rm -rf /var/lib/apt/lists/*
+
+#USER jenkins
+
+
+
 FROM jenkins/jenkins:lts-jdk21
 
 USER root
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends maven \
+    && apt-get install -y --no-install-recommends \
+       maven \
+       unzip \
+       curl \
+       groff \
+       less \
+    && curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" \
+       -o "/tmp/awscliv2.zip" \
+    && unzip -q /tmp/awscliv2.zip -d /tmp \
+    && /tmp/aws/install \
+    && rm -rf /tmp/aws /tmp/awscliv2.zip \
     && rm -rf /var/lib/apt/lists/*
 
 USER jenkins
