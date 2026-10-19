@@ -91,6 +91,11 @@ pipeline{
                             s3://lambda-cicd-platform-artifacts-491766120496-ap-south-1/builds/${BUILD_NUMBER}/lambda-cicd-platform-1.0.0.jar \
                             --only-show-errors
 
+                        aws s3 cp \
+                            build-metadata.json \
+                            s3://lambda-cicd-platform-artifacts-491766120496-ap-south-1/builds/${BUILD_NUMBER}/build-metadata.json \
+                            --only-show-errors
+
                         aws s3api head-object \
                             --bucket lambda-cicd-platform-artifacts-491766120496-ap-south-1 \
                             --key builds/${BUILD_NUMBER}/lambda-cicd-platform-1.0.0.jar \
